@@ -275,7 +275,8 @@ namespace Microsoft.AspNet.Mvc
             {
                 formatters = context.HttpContext
                                     .RequestServices
-                                    .GetRequiredService<IOutputFormattersProvider>()
+                                    .GetRequiredService<IScopedInstance<ActionBindingContext>>()
+                                    .Value
                                     .OutputFormatters;
             }
             else

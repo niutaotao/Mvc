@@ -589,6 +589,27 @@ namespace Microsoft.AspNet.Mvc.FunctionalTests
         }
 
         [Fact]
+        public async Task ResourceFilter_ChangesOutputFormatters_JsonReturned()
+        {
+            // Arrange
+            var input = "{ sampleInt: 10 }";
+
+            var server = TestHelper.CreateServer(_app, SiteName, _configureServices);
+            var client = server.CreateClient();
+
+            var request = new HttpRequestMessage(HttpMethod.Post, "http://localhost/Json");
+            request.Content = new StringContent(input, Encoding.UTF8, "application/json");
+
+            // Act
+            var response = await client.SendAsync(request);
+
+            // Assert
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.Equal("application/json", response.Content.Headers.ContentType.MediaType);
+            Assert.Equal("\"10\"", await response.Content.ReadAsStringAsync());
+        }
+
+        [Fact]
         public async Task ResourceFilter_ChangesInputFormatters_JsonAccepted()
         {
             // Arrange
@@ -605,7 +626,7 @@ namespace Microsoft.AspNet.Mvc.FunctionalTests
 
             // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            Assert.Equal("10", await response.Content.ReadAsStringAsync());
+            Assert.Equal("\"10\"", await response.Content.ReadAsStringAsync());
         }
 
         [Fact]
@@ -630,7 +651,7 @@ namespace Microsoft.AspNet.Mvc.FunctionalTests
 
             // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            Assert.Equal("0", await response.Content.ReadAsStringAsync());
+            Assert.Equal("\"0\"", await response.Content.ReadAsStringAsync());
         }
     }
 }
