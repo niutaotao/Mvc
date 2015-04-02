@@ -480,7 +480,8 @@ namespace Microsoft.AspNet.Mvc.ModelBinding
             {
                 try
                 {
-                    property.SetValue(bindingContext.Model, value);
+                    propertyMetadata.PropertySetter(bindingContext.Model, value);
+                    //property.SetValue(bindingContext.Model, value);
                 }
                 catch (Exception ex)
                 {

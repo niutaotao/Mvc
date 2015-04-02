@@ -407,5 +407,23 @@ namespace Microsoft.AspNet.Mvc.ModelBinding.Metadata
                 return _validatorMetadata;
             }
         }
+
+        /// <inheritdoc />
+        public override Func<object, object> PropertyAccessor
+        {
+            get
+            {
+                return _details.PropertyAccessor;
+            }
+        }
+
+        /// <inheritdoc />
+        public override Action<object, object> PropertySetter
+        {
+            get
+            {
+                return _details.PropertySetter;
+            }
+        }
     }
 }
