@@ -7,7 +7,7 @@ namespace Microsoft.AspNet.Mvc
 {
     public class DefaultInputFormatterSelector : IInputFormatterSelector
     {
-
+        /// <inheritdoc />
         public IInputFormatter SelectFormatter(
             IReadOnlyList<IInputFormatter> inputFormatters, 
             InputFormatterContext context)

@@ -937,24 +937,6 @@ namespace Microsoft.AspNet.Mvc.Core.Test.ActionResults
             }
         }
 
-        private class TestOutputFormatterProvider : IOutputFormattersProvider
-        {
-            private readonly IEnumerable<IOutputFormatter> _formatters;
-
-            public TestOutputFormatterProvider(IEnumerable<IOutputFormatter> formatters)
-            {
-                _formatters = formatters;
-            }
-
-            public IReadOnlyList<IOutputFormatter> OutputFormatters
-            {
-                get
-                {
-                    return _formatters.ToList();
-                }
-            }
-        }
-
         public class Person
         {
             public string Name { get; set; }

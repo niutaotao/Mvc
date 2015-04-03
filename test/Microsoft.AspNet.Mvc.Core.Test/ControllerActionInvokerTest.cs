@@ -2035,22 +2035,16 @@ namespace Microsoft.AspNet.Mvc
                           .Returns(DefaultOrder.DefaultFrameworkSortOrder);
 
 
-            var inputFormattersProvider = new Mock<IInputFormattersProvider>();
-            inputFormattersProvider.SetupGet(o => o.InputFormatters)
-                                            .Returns(new List<IInputFormatter>());
-            var excludeFilterProvider = new Mock<IValidationExcludeFiltersProvider>();
-            excludeFilterProvider.SetupGet(o => o.ExcludeFilters)
-                                 .Returns(new List<IExcludeTypeValidationFilter>());
             var invoker = new TestControllerActionInvoker(
                 actionContext,
                 new[] { filterProvider.Object },
                 new MockControllerFactory(this),
                 actionDescriptor,
-                inputFormattersProvider.Object,
+                new InputFormatter[0],
                 Mock.Of<IControllerActionArgumentBinder>(),
-                new MockModelBinderProvider(),
-                new MockModelValidatorProviderProvider(),
-                new MockValueProviderFactoryProvider(),
+                new IModelBinder[0],
+                new IModelValidatorProvider[0],
+                new IValueProviderFactory[0],
                 new MockScopedInstance<ActionBindingContext>(),
                 tempData);
 
@@ -2095,23 +2089,20 @@ namespace Microsoft.AspNet.Mvc
             var controllerFactory = new Mock<IControllerFactory>();
             controllerFactory.Setup(c => c.CreateController(It.IsAny<ActionContext>()))
                              .Returns(new TestController());
-            var inputFormattersProvider = new Mock<IInputFormattersProvider>();
-            inputFormattersProvider.SetupGet(o => o.InputFormatters)
-                                            .Returns(new List<IInputFormatter>());
             var metadataProvider = new EmptyModelMetadataProvider();
             var invoker = new ControllerActionInvoker(
                 actionContext,
                 new List<IFilterProvider>(),
                 controllerFactory.Object,
                 actionDescriptor,
-                inputFormattersProvider.Object,
+                new IInputFormatter[0],
                 new DefaultControllerActionArgumentBinder(
                     metadataProvider,
-                    new DefaultObjectValidator(Mock.Of<IValidationExcludeFiltersProvider>(), metadataProvider),
+                    new DefaultObjectValidator(new IExcludeTypeValidationFilter[0], metadataProvider),
                     new MockMvcOptionsAccessor()),
-                new MockModelBinderProvider() { ModelBinders = new List<IModelBinder>() { binder.Object } },
-                new MockModelValidatorProviderProvider(),
-                new MockValueProviderFactoryProvider(),
+                new IModelBinder[] { binder.Object },
+                new IModelValidatorProvider[0],
+                new IValueProviderFactory[0],
                 new MockScopedInstance<ActionBindingContext>(),
                 Mock.Of<ITempDataDictionary>());
 
@@ -2205,11 +2196,11 @@ namespace Microsoft.AspNet.Mvc
                 IFilterProvider[] filterProvider,
                 MockControllerFactory controllerFactory,
                 ControllerActionDescriptor descriptor,
-                IInputFormattersProvider inputFormattersProvider,
+                IReadOnlyList<IInputFormatter> inputFormatters,
                 IControllerActionArgumentBinder controllerActionArgumentBinder,
-                IModelBinderProvider modelBinderProvider,
-                IModelValidatorProviderProvider modelValidatorProviderProvider,
-                IValueProviderFactoryProvider valueProviderFactoryProvider,
+                IReadOnlyList<IModelBinder> modelBinders,
+                IReadOnlyList<IModelValidatorProvider> modelValidatorProviders,
+                IReadOnlyList<IValueProviderFactory> valueProviderFactories,
                 IScopedInstance<ActionBindingContext> actionBindingContext,
                 ITempDataDictionary tempData)
                 : base(
@@ -2217,11 +2208,11 @@ namespace Microsoft.AspNet.Mvc
                       filterProvider,
                       controllerFactory,
                       descriptor,
-                      inputFormattersProvider,
+                      inputFormatters,
                       controllerActionArgumentBinder,
-                      modelBinderProvider,
-                      modelValidatorProviderProvider,
-                      valueProviderFactoryProvider,
+                      modelBinders,
+                      modelValidatorProviders,
+                      valueProviderFactories,
                       actionBindingContext,
                       tempData)
             {
